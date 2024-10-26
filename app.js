@@ -1,7 +1,7 @@
 const express = require('express');
 const os = require('os');
 const MongoClient = require('mongodb').MongoClient;
-const MONGODB_URL = process.env.MONGODB_URL || (process.env.NODE_ENV === 'production' ? 'mongodb://mongo:27017/okpogo' : 'mongodb://localhost:27017/okpogo');
+const MONGODB_URL = 'mongodb://mongo:27017/okpogo';
 const MONGODB_DBNAME = process.env.MONGODB_DBNAME || 'okpogo';
 const PORT = process.env.PORT || 8080;
 
