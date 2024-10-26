@@ -1,7 +1,7 @@
 {
   "scripts": {
      "build" : "webpack"
-  }
+  },
   "dependencies": {
     "express": "^4.21.1",
     "mongodb": "^6.10.0",
