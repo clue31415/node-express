@@ -1,9 +1,9 @@
 const express = require('express');
 const os = require('os');
 const MongoClient = require('mongodb').MongoClient;
-const MONGODB_URL = ${MONGODB_URL};
-const MONGODB_DBNAME = ${MONGODB_DBNAME};
-const PORT = ${PORT};
+const MONGODB_URL = process.env.MONGODB_URL || (process.env.NODE_ENV === 'production' ? 'mongodb://mongo:27017/okpogo' : 'mongodb://localhost:27017/okpogo');
+const MONGODB_DBNAME = process.env.MONGODB_DBNAME || 'okpogo';
+const PORT = process.env.PORT || 8080;
 
 console.log('MONGODB_URL', MONGODB_URL);
 console.log('MONGODB_DBNAME', MONGODB_DBNAME);
@@ -28,14 +28,6 @@ const app = express()
 
           collection.find({}).toArray((err, data) => {
             if (err) return next(err);
-
-            /*res.send('<pre>' + JSON.stringify({
-              url: client.s.url,
-              options: client.s.options,
-              poolSize: client.topology.s.poolSize,
-              platform: client.topology.clientInfo,
-              data
-            }, null, 2) + '</pre>');*/
 
             client.close();
           });
