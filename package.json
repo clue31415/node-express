@@ -1,10 +1,14 @@
 {
   "scripts": {
-     "build" : "webpack"
+    "build": "webpack"
   },
   "dependencies": {
     "express": "^4.21.1",
     "mongodb": "^6.10.0",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "webpack": "^5.95.0"
+  },
+  "devDependencies": {
+    "webpack-cli": "^5.1.4"
   }
 }
