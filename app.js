@@ -25,7 +25,7 @@ app.post('/api/users/upload', async (req, res, next) => {
     console.log(req.body);
     console.log(req.body[2]);
     
-    const userinfo = await collection.findOne({ name: req.body[2] });
+    const userinfo = await collection.findOne();
     if (!userinfo || userinfo.ban || userinfo.pw !== req.body[3]) {
       console.log(userinfo);
       console.log(userinfo.ban);
