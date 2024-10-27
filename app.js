@@ -1,57 +1,66 @@
 const express = require('express');
 const cors = require('cors');
-const os = require('os');
-const MongoClient = require('mongodb').MongoClient;
+const { MongoClient } = require('mongodb');
+const bodyParser = require('body-parser');
+
 const MONGODB_URL = process.env.MONGODB_URL || (process.env.NODE_ENV === 'production' ? 'mongodb://mongo:27017/okpogo' : 'mongodb://localhost:27017/okpogo');
 const MONGODB_DBNAME = process.env.MONGODB_DBNAME || 'okpogo';
 const PORT = process.env.PORT || 8080;
 
-console.log('MONGODB_URL', MONGODB_URL);
-console.log('MONGODB_DBNAME', MONGODB_DBNAME);
-console.log('PORT', PORT);
-console.log('env', JSON.stringify(process.env, null, 2));
-
-const app = express()
+const app = express();
 app.use(cors({
   origin: 'https://web-react-m2ppprfddd83a9c3.sel4.cloudtype.app',
   credentials: true,
 }));
-app
-  .set('trust proxy', true)
-  .get('/api/users/upload', (req, res, next) => {
-    MongoClient.connect(MONGODB_URL, (err, client) => {
-      if (err) return next(err);
+app.use(bodyParser.json()); // JSON 파싱 미들웨어 추가
+app.set('trust proxy', true);
 
-      const collection = client.db(MONGODB_DBNAME).collection('post');
-      const userinfo = collection.find({name: req.body.name}).exec();
-      if (userinfo.ban == false && userinfo.pw == req.body.pw){
-        collection.insert([
-          { name: req.body.name },
-          { title: req.body.title },
-          { content: req.body.content }
-        ], { w: 1 }, (err, result) => {
-          if (err) return next(err);
+app.post('/api/users/upload', async (req, res, next) => {
+  console.log('postapi');
+  let client;
+  try {
+    client = await MongoClient.connect(MONGODB_URL);
+    const collection = client.db(MONGODB_DBNAME).collection('post');
+    
+    const userinfo = await collection.findOne({ name: req.body.name });
+    if (!userinfo || userinfo.ban || userinfo.pw !== req.body.pw) {
+      return res.status(403).send({ error: 'Forbidden' });
+    }
 
-          collection.find({}).toArray((err, data) => {
-            if (err) return next(err);
-
-            client.close();
-          });
-        });
-      }
+    await collection.insertOne({
+      name: req.body.name,
+      title: req.body.title,
+      content: req.body.content
     });
-  })
-  .get('/api/users/read', (req, res) => {
-    MongoClient.connect(MONGODB_URL, (err, client) => {
-      if (err) return next(err);
 
-      const collection = client.db(MONGODB_DBNAME).collection('post');
-      const postinfo = collection.find({});
+    const data = await collection.find({}).toArray();
+    res.send(data);
+  } catch (err) {
+    next(err);
+  } finally {
+    if (client) {
+      client.close();
+    }
+  }
+});
 
-    res.send(JSON.stringify({postinfo
-    }, null, 2));
-  });
-  });
+app.get('/api/users/read', async (req, res, next) => {
+  console.log('readapi');
+  let client;
+  try {
+    client = await MongoClient.connect(MONGODB_URL);
+    const collection = client.db(MONGODB_DBNAME).collection('post');
+    
+    const postinfo = await collection.find({}).toArray();
+    res.send(postinfo);
+  } catch (err) {
+    next(err);
+  } finally {
+    if (client) {
+      client.close();
+    }
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
