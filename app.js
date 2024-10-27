@@ -11,9 +11,16 @@ console.log('MONGODB_DBNAME', MONGODB_DBNAME);
 console.log('PORT', PORT);
 console.log('env', JSON.stringify(process.env, null, 2));
 
+var corsOptions = {
+  origin: 'https://web-react-m2ppprfddd83a9c3.sel4.cloudtype.app',
+  // 이 설정은 https://sub.example.app 인 origin을 허용합니다.
+  // 어플리케이션 구성에 맞게 origin 규칙을 적용해주세요.
+  optionsSuccessStatus: 200 
+}
+
 const app = express()
   .set('trust proxy', true)
-  .get('api/users/upload', (req, res, next) => {
+  .get('/api/users/upload', cors(corsOptions), (req, res, next) => {
     MongoClient.connect(MONGODB_URL, (err, client) => {
       if (err) return next(err);
 
@@ -36,7 +43,7 @@ const app = express()
       }
     });
   })
-  .get('api/users/read', (req, res) => {
+  .get('/api/users/read', cors(corsOptions), (req, res) => {
     MongoClient.connect(MONGODB_URL, (err, client) => {
       if (err) return next(err);
 
@@ -47,10 +54,6 @@ const app = express()
     }, null, 2));
   });
   });
-
-app.use(cors({
-  origin: 'https://web-react-m2ppprfddd83a9c3.sel4.cloudtype.app/'
-}));
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
