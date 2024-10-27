@@ -24,6 +24,10 @@ app.post('/api/users/upload', async (req, res, next) => {
     
     const userinfo = await collection.findOne({ name: req.body.name });
     if (!userinfo || userinfo.ban || userinfo.pw !== req.body.pw) {
+      console.log(userinfo);
+      console.log(userinfo.ban);
+      console.log(userinfo.pw);
+      
       return res.status(403).send({ error: 'Forbidden' });
     } else {
     await collection.insertOne({
