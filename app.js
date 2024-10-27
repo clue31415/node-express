@@ -12,7 +12,7 @@ console.log('env', JSON.stringify(process.env, null, 2));
 
 const app = express()
   .set('trust proxy', true)
-  .get('/upload', (req, res, next) => {
+  .get('api/users/upload', (req, res, next) => {
     MongoClient.connect(MONGODB_URL, (err, client) => {
       if (err) return next(err);
 
@@ -35,7 +35,7 @@ const app = express()
       }
     });
   })
-  .get('/read', (req, res) => {
+  .get('api/users/read', (req, res) => {
     MongoClient.connect(MONGODB_URL, (err, client) => {
       if (err) return next(err);
 
