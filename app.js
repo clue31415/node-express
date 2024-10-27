@@ -12,6 +12,8 @@ console.log('PORT', PORT);
 console.log('env', JSON.stringify(process.env, null, 2));
 
 const app = express()
+app.use(cors());
+app
   .set('trust proxy', true)
   .get('/api/users/upload', (req, res, next) => {
     MongoClient.connect(MONGODB_URL, (err, client) => {
@@ -47,8 +49,6 @@ const app = express()
     }, null, 2));
   });
   });
-
-app.use(cors());
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
