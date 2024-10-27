@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const os = require('os');
 const MongoClient = require('mongodb').MongoClient;
 const MONGODB_URL = process.env.MONGODB_URL || (process.env.NODE_ENV === 'production' ? 'mongodb://mongo:27017/okpogo' : 'mongodb://localhost:27017/okpogo');
@@ -46,6 +47,10 @@ const app = express()
     }, null, 2));
   });
   });
+
+app.use(cors({
+  origin: 'https://web-react-m2ppprfddd83a9c3.sel4.cloudtype.app/'
+}));
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
