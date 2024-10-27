@@ -33,8 +33,8 @@ app.post('/api/users/upload', async (req, res, next) => {
       
       return res.status(403).send({ error: 'Forbidden' });
     } else {
-      collection = client.db(MONGODB_DBNAME).collection('post');
-      await collection.insertOne({
+      const collectionp = client.db(MONGODB_DBNAME).collection('post');
+      await collectionp.insertOne({
         name: req.body[2],
         title: req.body[0],
         content: req.body[1]
