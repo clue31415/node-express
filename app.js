@@ -12,7 +12,10 @@ console.log('PORT', PORT);
 console.log('env', JSON.stringify(process.env, null, 2));
 
 const app = express()
-app.use(cors());
+app.use(cors({
+  origin: 'https://web-react-m2ppprfddd83a9c3.sel4.cloudtype.app',
+  credentials: true,
+}));
 app
   .set('trust proxy', true)
   .get('/api/users/upload', (req, res, next) => {
