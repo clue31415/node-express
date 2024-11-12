@@ -51,7 +51,6 @@ app.post('/api/users/upload', async (req, res, next) => {
 });
 
 app.get('/api/users/read', async (req, res, next) => {
-  console.log('readapi');
   let client;
   try {
     client = await MongoClient.connect(MONGODB_URL);
@@ -59,8 +58,6 @@ app.get('/api/users/read', async (req, res, next) => {
     
     const postinfo = await collection.find({}).toArray();
     res.send(postinfo);
-    console.log(postinfo);
-    console.log(postinfo[0]);
   } catch (err) {
     next(err);
   } finally {
