@@ -57,7 +57,7 @@ app.get('/api/users/read', async (req, res, next) => {
     client = await MongoClient.connect(MONGODB_URL);
     const collection = client.db(MONGODB_DBNAME).collection('post');
     
-    const postinfo = await collection.find({}).toArray();
+    const postinfo = await collection.find({}).toArray().reverse();
     res.send(postinfo);
     console.log(postinfo);
     console.log(postinfo[0]);
