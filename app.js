@@ -21,15 +21,9 @@ app.post('/api/users/upload', async (req, res, next) => {
   try {
     client = await MongoClient.connect(MONGODB_URL);
     const collection = client.db(MONGODB_DBNAME).collection('namepw');
-    //console.log(req);
-    console.log(req.body);
-    console.log(req.body[2]);
-    
     const userinfo = await collection.findOne({ name: req.body[2] });
     if (!userinfo || userinfo.ban || userinfo.pw !== req.body[3] || req.body[0] == null || req.body[1] == null) {
-      console.log(userinfo);
-      console.log(userinfo.ban);
-      console.log(userinfo.pw);
+      console.log(req.body);
       
       return res.status(403).send({ error: 'Forbidden' });
     } else {
