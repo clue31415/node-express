@@ -16,7 +16,7 @@ app.use(bodyParser.json()); // JSON 파싱 미들웨어 추가
 app.set('trust proxy', true);
 
 app.post('/api/users/upload', async (req, res, next) => {
-  console.log('postapi');
+  //console.log('postapi');
   let client;
   try {
     client = await MongoClient.connect(MONGODB_URL);
