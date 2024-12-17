@@ -50,14 +50,12 @@ app.post('/api/users/upload', async (req, res, next) => {
 });
 
 app.post('/api/users/uploal', async (req, res, next) => {
-  //console.log('postapi');
   let client;
   try {
     client = await MongoClient.connect(MONGODB_URL);
     const collection = client.db(MONGODB_DBNAME).collection('namepw');
     const userinfo = await collection.findOne({ name: req.body[2] });
     const collectionp = client.db(MONGODB_DBNAME).collection('post');
-    console.log(req.body);
     if (req.body[3]=="번호로삭제") {
       const finddocuments = await collectionp
       .find({})
