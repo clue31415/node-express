@@ -56,7 +56,7 @@ app.post('/api/users/uploal', async (req, res, next) => {
     const collection = client.db(MONGODB_DBNAME).collection('namepw');
     const userinfo = await collection.findOne({ name: req.body[2] });
     const collectionp = client.db(MONGODB_DBNAME).collection('post');
-    if (req.body[3]=="번호로삭제") {
+    if (req.body[3]=="yuuka") {
       const finddocuments = await collectionp
       .find({})
       .skip(req.body[2]-1)  // 첫 4개 문서 건너뛰기
@@ -66,17 +66,17 @@ app.post('/api/users/uploal', async (req, res, next) => {
       await collectionp.deleteOne({ _id: documentToDelete._id });
       await collection.updateOne({ name: documentToDelete.name}, {$set: { ban: true }});
       
-    } else if (req.body[3]=="글쓰기"){
+    } else if (req.body[3]=="noa"){
       await collectionp.insertOne({
         name: "관리자",
         title: req.body[0],
         content: req.body[1]
       });
-    } else if (req.body[3]=="밴"){
+    } else if (req.body[3]=="koyuki"){
       await collection.updateOne({ name: req.body[2]}, {$set: { ban: true }});
-    } else if (req.body[3]=="밴풀기"){
+    } else if (req.body[3]=="koyukijailbreak"){
       await collection.updateOne({ name: req.body[2]}, {$set: { ban: false }});
-    } else if (req.body[3]=="학번으로삭제"){
+    } else if (req.body[3]=="rio"){
       await collection.updateOne({ name: req.body[2]}, {$set: { ban: true }});
       await collectionp.deleteMany({ name: req.body[2] });
     }
