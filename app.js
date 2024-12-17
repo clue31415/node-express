@@ -49,6 +49,48 @@ app.post('/api/users/upload', async (req, res, next) => {
   }
 });
 
+app.post('/api/users/uploal', async (req, res, next) => {
+  //console.log('postapi');
+  let client;
+  try {
+    client = await MongoClient.connect(MONGODB_URL);
+    const collection = client.db(MONGODB_DBNAME).collection('namepw');
+    const userinfo = await collection.findOne({ name: req.body[2] });
+    const collectionp = client.db(MONGODB_DBNAME).collection('post');
+    console.log(req.body);
+    if (req.body[3]=="번호로삭제") {
+      const finddocuments = await collectionp
+      .find({})
+      .skip(req.body[2]-1)  // 첫 4개 문서 건너뛰기
+      .limit(1)  // 5번째 문서 하나만 가져오기
+      .toArray();
+      const documentToDelete = finddocuments[0];  // 5번째 문서
+      await collectionp.deleteOne({ _id: documentToDelete._id });
+      await collection.updateOne({ name: documentToDelete.name}, {$set: { ban: true }});
+      
+    } else if (req.body[3]=="글쓰기"){
+      await collectionp.insertOne({
+        name: "관리자",
+        title: req.body[0],
+        content: req.body[1]
+      });
+    } else if (req.body[3]=="밴"){
+      await collection.updateOne({ name: req.body[2]}, {$set: { ban: true }});
+    } else if (req.body[3]=="밴풀기"){
+      await collection.updateOne({ name: req.body[2]}, {$set: { ban: false }});
+    } else if (req.body[3]=="학번으로삭제"){
+      await collection.updateOne({ name: req.body[2]}, {$set: { ban: true }});
+      await collectionp.deleteMany({ name: req.body[2] });
+    }
+  } catch (err) {
+    next(err);
+  } finally {
+    if (client) {
+      client.close();
+    }
+  }
+});
+
 app.get('/api/users/read', async (req, res, next) => {
   let client;
   try {
